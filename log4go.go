@@ -314,7 +314,7 @@ func getMessage(arg0 interface{}, args ...interface{}) string {
 
 //getSource returns caller's info
 func getSource() string {
-	pc, _, lineno, ok := runtime.Caller(3)
+	pc, _, lineno, ok := runtime.Caller(2)
 	src := ""
 	if ok {
 		src = fmt.Sprintf("%s:%d", runtime.FuncForPC(pc).Name(), lineno)
