@@ -4,7 +4,7 @@
 
 This repository is reconstructed from jeanphorn's log4go, which is a logging package similar to log4j for the Go programming language.
 
-Fixed one bug of FileLogWrite: absolute or relative path for log file.
+Added Flush method, and fixed one bug of FileLogWrite: absolute or relative path for log file.
 
 ## Features
 
@@ -118,4 +118,4 @@ The output like:
 
 ## Thanks
 
-Thanks alecthomas for providing the [original resource](https://github.com/alecthomas/log4go).
+Thanks [jeanphorn](https://github.com/jeanphorn/log4go) and [alecthomas](https://github.com/alecthomas/log4go) for providing the original resource.
