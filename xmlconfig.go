@@ -29,8 +29,8 @@ type xmlLoggerConfig struct {
 }
 
 // Load XML configuration; see examples/example.xml for documentation
-func (log Logger) LoadConfiguration(filename string) {
-	log.Close()
+func (l Logger) LoadConfiguration(filename string) {
+	l.Close()
 
 	// Open the configuration file
 	fd, err := os.Open(filename)
@@ -77,22 +77,16 @@ func (log Logger) LoadConfiguration(filename string) {
 		}
 
 		switch xmlfilt.Level {
-		case "FINEST":
-			lvl = FINEST
-		case "FINE":
-			lvl = FINE
 		case "DEBUG":
 			lvl = DEBUG
-		case "TRACE":
-			lvl = TRACE
 		case "INFO":
 			lvl = INFO
 		case "WARNING":
 			lvl = WARNING
 		case "ERROR":
 			lvl = ERROR
-		case "CRITICAL":
-			lvl = CRITICAL
+		case "FATAL":
+			lvl = FATAL
 		default:
 			fmt.Fprintf(os.Stderr, "LoadConfiguration: Error: Required child <%s> for filter has unknown value in %s: %s\n", "level", filename, xmlfilt.Level)
 			bad = true
@@ -127,7 +121,7 @@ func (log Logger) LoadConfiguration(filename string) {
 			continue
 		}
 
-		log[xmlfilt.Tag] = &Filter{lvl, filt, "DEFAULT"}
+		l[xmlfilt.Tag] = &Filter{lvl, filt, "DEFAULT"}
 	}
 }
 

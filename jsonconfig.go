@@ -60,8 +60,8 @@ type LogConfig struct {
 
 // LoadJsonConfiguration load log config from json file
 // see examples/example.json for ducumentation
-func (log Logger) LoadJsonConfiguration(filename string) {
-	log.Close()
+func (l Logger) LoadJsonConfiguration(filename string) {
+	l.Close()
 	dst := new(bytes.Buffer)
 	var (
 		lc      LogConfig
@@ -87,7 +87,7 @@ func (log Logger) LoadJsonConfiguration(filename string) {
 
 	if lc.Console.Enable {
 		filt, _ := jsonToConsoleLogWriter(filename, lc.Console)
-		log["stdout"] = &Filter{getLogLevel(lc.Console.Level), filt, "DEFAULT"}
+		l["stdout"] = &Filter{getLogLevel(lc.Console.Level), filt, "DEFAULT"}
 	}
 
 	for _, fc := range lc.Files {
@@ -100,7 +100,7 @@ func (log Logger) LoadJsonConfiguration(filename string) {
 		}
 
 		filt, _ := jsonToFileLogWriter(filename, fc)
-		log[fc.Category] = &Filter{getLogLevel(fc.Level), filt, fc.Category}
+		l[fc.Category] = &Filter{getLogLevel(fc.Level), filt, fc.Category}
 	}
 
 	for _, sc := range lc.Sockets {
@@ -113,7 +113,7 @@ func (log Logger) LoadJsonConfiguration(filename string) {
 		}
 
 		filt, _ := jsonToSocketLogWriter(filename, sc)
-		log[sc.Category] = &Filter{getLogLevel(sc.Level), filt, sc.Category}
+		l[sc.Category] = &Filter{getLogLevel(sc.Level), filt, sc.Category}
 	}
 
 }
@@ -121,22 +121,16 @@ func (log Logger) LoadJsonConfiguration(filename string) {
 func getLogLevel(l string) Level {
 	var lvl Level
 	switch l {
-	case "FINEST":
-		lvl = FINEST
-	case "FINE":
-		lvl = FINE
 	case "DEBUG":
 		lvl = DEBUG
-	case "TRACE":
-		lvl = TRACE
 	case "INFO":
 		lvl = INFO
 	case "WARNING":
 		lvl = WARNING
 	case "ERROR":
 		lvl = ERROR
-	case "CRITICAL":
-		lvl = CRITICAL
+	case "FATAL":
+		lvl = FATAL
 	default:
 		fmt.Fprintf(os.Stderr, "LoadJsonConfiguration: Error: Required level <%s> for filter has unknown value: %s\n", "level", l)
 		os.Exit(1)

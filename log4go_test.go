@@ -29,9 +29,9 @@ func newLogRecord(lvl Level, src string, msg string) *LogRecord {
 
 func TestELog(t *testing.T) {
 	fmt.Printf("Testing %s\n", L4G_VERSION)
-	lr := newLogRecord(CRITICAL, "source", "message")
-	if lr.Level != CRITICAL {
-		t.Errorf("Incorrect level: %d should be %d", lr.Level, CRITICAL)
+	lr := newLogRecord(FATAL, "source", "message")
+	if lr.Level != FATAL {
+		t.Errorf("Incorrect level: %d should be %d", lr.Level, FATAL)
 	}
 	if lr.Source != "source" {
 		t.Errorf("Incorrect source: %s should be %s", lr.Source, "source")
@@ -116,7 +116,7 @@ var logRecordWriteTests = []struct {
 	{
 		Test: "Normal message",
 		Record: &LogRecord{
-			Level:   CRITICAL,
+			Level:   FATAL,
 			Source:  "source",
 			Message: "message",
 			Created: now,
@@ -159,7 +159,7 @@ func TestFileLogWriter(t *testing.T) {
 	}
 	defer os.Remove(testLogFile)
 
-	w.LogWrite(newLogRecord(CRITICAL, "source", "message"))
+	w.LogWrite(newLogRecord(FATAL, "source", "message"))
 	w.Close()
 	runtime.Gosched()
 
@@ -182,7 +182,7 @@ func TestXMLLogWriter(t *testing.T) {
 	}
 	defer os.Remove(testLogFile)
 
-	w.LogWrite(newLogRecord(CRITICAL, "source", "message"))
+	w.LogWrite(newLogRecord(FATAL, "source", "message"))
 	w.Close()
 	runtime.Gosched()
 
@@ -232,7 +232,7 @@ func TestLogger(t *testing.T) {
 	}
 
 	//func (l *Logger) Critical(format string, args ...interface{}) error {}
-	if err := l.Critical("%s %d %#v", "Critical:", 100, []int64{}); err.Error() != "Critical: 100 []int64{}" {
+	if err := l.Fatal("%s %d %#v", "Critical:", 100, []int64{}); err.Error() != "Critical: 100 []int64{}" {
 		t.Errorf("Critical returned invalid error: %s", err)
 	}
 
@@ -261,19 +261,16 @@ func TestLogOutput(t *testing.T) {
 	l := make(Logger)
 
 	// Delete and open the output log without a timestamp (for a constant md5sum)
-	l.AddFilter("file", FINEST, NewFileLogWriter(testLogFile, false, false).SetFormat("[%L] %M"))
+	l.AddFilter("file", DEBUG, NewFileLogWriter(testLogFile, false, false).SetFormat("[%L] %M"))
 	defer os.Remove(testLogFile)
 
 	// Send some log messages
-	l.Log(CRITICAL, "testsrc1", fmt.Sprintf("This message is level %d", int(CRITICAL)))
+	l.Log(FATAL, "testsrc1", fmt.Sprintf("This message is level %d", int(FATAL)))
 	l.Logf(ERROR, "This message is level %v", ERROR)
 	l.Logf(WARNING, "This message is level %s", WARNING)
 	l.Logc(INFO, func() string { return "This message is level INFO" })
-	l.Trace("This message is level %d", int(TRACE))
+	l.Info("This message is level %d", int(INFO))
 	l.Debug("This message is level %s", DEBUG)
-	l.Fine(func() string { return fmt.Sprintf("This message is level %v", FINE) })
-	l.Finest("This message is level %v", FINEST)
-	l.Finest(FINEST, "is also this message's level")
 
 	l.Close()
 
@@ -347,7 +344,7 @@ func TestXMLConfig(t *testing.T) {
 	fmt.Fprintln(fd, "  <filter enabled=\"true\">")
 	fmt.Fprintln(fd, "    <tag>stdout</tag>")
 	fmt.Fprintln(fd, "    <type>console</type>")
-	fmt.Fprintln(fd, "    <!-- level is (:?FINEST|FINE|DEBUG|TRACE|INFO|WARNING|ERROR) -->")
+	fmt.Fprintln(fd, "    <!-- level is (:?DEBUG|INFO|WARNING|ERROR|FATAL) -->")
 	fmt.Fprintln(fd, "    <level>DEBUG</level>")
 	fmt.Fprintln(fd, "  </filter>")
 	fmt.Fprintln(fd, "  <filter enabled=\"true\">")
@@ -360,7 +357,7 @@ func TestXMLConfig(t *testing.T) {
 	fmt.Fprintln(fd, "       % t - Time (15:04)")
 	fmt.Fprintln(fd, "       %D - Date (2006/01/02)")
 	fmt.Fprintln(fd, "       % d - Date (01/02/06)")
-	fmt.Fprintln(fd, "       %L - Level (FNST, FINE, DEBG, TRAC, WARN, EROR, CRIT)")
+	fmt.Fprintln(fd, "       %L - Level (DBG, INF, WARN, ERR, FTL)")
 	fmt.Fprintln(fd, "       %S - Source")
 	fmt.Fprintln(fd, "       %M - Message")
 	fmt.Fprintln(fd, "       It ignores unknown format strings (and removes them)")
@@ -429,11 +426,11 @@ func TestXMLConfig(t *testing.T) {
 	if lvl := log["stdout"].Level; lvl != DEBUG {
 		t.Errorf("XMLConfig: Expected stdout to be set to level %d, found %d", DEBUG, lvl)
 	}
-	if lvl := log["file"].Level; lvl != FINEST {
-		t.Errorf("XMLConfig: Expected file to be set to level %d, found %d", FINEST, lvl)
+	if lvl := log["file"].Level; lvl != DEBUG {
+		t.Errorf("XMLConfig: Expected file to be set to level %d, found %d", DEBUG, lvl)
 	}
-	if lvl := log["xmllog"].Level; lvl != TRACE {
-		t.Errorf("XMLConfig: Expected xmllog to be set to level %d, found %d", TRACE, lvl)
+	if lvl := log["xmllog"].Level; lvl != DEBUG {
+		t.Errorf("XMLConfig: Expected xmllog to be set to level %d, found %d", DEBUG, lvl)
 	}
 
 	// Make sure the w is open and points to the right file
@@ -453,7 +450,7 @@ func TestXMLConfig(t *testing.T) {
 func BenchmarkFormatLogRecord(b *testing.B) {
 	const updateEvery = 1
 	rec := &LogRecord{
-		Level:   CRITICAL,
+		Level:   FATAL,
 		Created: now,
 		Source:  "source",
 		Message: "message",

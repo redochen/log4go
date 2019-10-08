@@ -23,7 +23,7 @@ Added Flush method, and fixed one bug of FileLogWrite: absolute or relative path
 
 ## Usage
 
-First, get the code from this repo. 
+First, get the code from this repo.
 
 ```go get github.com/redochen/log4go```
 
@@ -42,15 +42,15 @@ Here is a Json config example:
 {
     "console": {
         "enable": true,		// wether output the log
-        "level": "FINE"		// log level: FINE, DEBUG, TRACE, INFO, WARNING,ERROR, CRITICAL
-    },  
+        "level": "ERROR"	// log level: DEBUG, INFO, WARNING, ERROR, FATAL
+    },
     "files": [{
         "enable": true,
         "level": "DEBUG",
         "filename":"./test.log",
         "category": "Test",			// different category log to different files
         "pattern": "[%D %T] [%C] [%L] (%S) %M"	// log output formmat
-    },{ 
+    },{
         "enable": false,
         "level": "DEBUG",
         "filename":"rotate_test.log",
@@ -61,7 +61,7 @@ Here is a Json config example:
         "maxlines": "10K",
         "daily": true,
         "sanitize": true
-    }], 
+    }],
     "sockets": [{
         "enable": false,
         "level": "DEBUG",
@@ -69,7 +69,7 @@ Here is a Json config example:
         "pattern": "[%D %T] [%C] [%L] (%S) %M",
         "addr": "127.0.0.1:12124",
         "protocol":"udp"
-    }]  
+    }]
 }
 ```
 
@@ -109,11 +109,11 @@ func main() {
 
 The output like:
 
-> [2017/11/15 14:35:11 CST] [Test] [INFO] (main.main:15) category Test info test ...     
-> [2017/11/15 14:35:11 CST] [Test] [INFO] (main.main:16) category Test info test message: new test msg     
-> [2017/11/15 14:35:11 CST] [Test] [DEBG] (main.main:17) category Test debug test ...     
-> [2017/11/15 14:35:11 CST] [DEFAULT] [INFO] (main.main:26) normal info test ...     
-> [2017/11/15 14:35:11 CST] [DEFAULT] [DEBG] (main.main:27) normal debug test ...    
+> [2017/11/15 14:35:11 CST] [Test] [INFO] (main.main:15) category Test info test ...
+> [2017/11/15 14:35:11 CST] [Test] [INFO] (main.main:16) category Test info test message: new test msg
+> [2017/11/15 14:35:11 CST] [Test] [DEBG] (main.main:17) category Test debug test ...
+> [2017/11/15 14:35:11 CST] [DEFAULT] [INFO] (main.main:26) normal info test ...
+> [2017/11/15 14:35:11 CST] [DEFAULT] [DEBG] (main.main:27) normal debug test ...
 
 
 ## Thanks
