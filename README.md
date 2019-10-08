@@ -25,11 +25,11 @@ Added Flush method, and fixed one bug of FileLogWrite: absolute or relative path
 
 First, get the code from this repo. 
 
-```go get github.com/jeanphorn/log4go```
+```go get github.com/redochen/log4go```
 
 Then import it to your project.
 
-```import log "github.com/jeanphorn/log4go"```
+```import log "github.com/redochen/log4go"```
 
 
 ## Examples
@@ -79,7 +79,7 @@ Code example:
 package main
 
 import (
-	log "github.com/jeanphorn/log4go"
+	log "github.com/redochen/log4go"
 )
 
 func main() {
