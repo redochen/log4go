@@ -1,4 +1,4 @@
-module log4go
+module github.com/redochen/log4go
 
 go 1.16
 
