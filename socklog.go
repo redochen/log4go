@@ -9,22 +9,25 @@ import (
 	"os"
 )
 
-// This log writer sends output to a socket
+//SocketLogWriter This log writer sends output to a socket
 type SocketLogWriter chan *LogRecord
 
-// This is the SocketLogWriter's output method
+//LogWrite This is the SocketLogWriter's output method
 func (w SocketLogWriter) LogWrite(rec *LogRecord) {
 	w <- rec
 }
 
+//Close close the SocketLogWriter's output
 func (w SocketLogWriter) Close() {
 	close(w)
 }
 
+//Flush flush content of SocketLogWriter to socket
 func (w SocketLogWriter) Flush() {
 
 }
 
+//NewSocketLogWriter create new instance of SocketLogWriter
 func NewSocketLogWriter(proto, hostport string) SocketLogWriter {
 	sock, err := net.Dial(proto, hostport)
 	if err != nil {

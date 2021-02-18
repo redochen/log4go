@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-// This log writer sends output to a file
+//FileLogWriter This log writer sends output to a file
 type FileLogWriter struct {
 	rec chan *LogRecord
 	rot chan bool
@@ -25,15 +25,21 @@ type FileLogWriter struct {
 	header, trailer string
 
 	// Rotate at linecount
-	maxlines          int
+	maxlines int
+
+	//
 	maxlines_curlines int
 
 	// Rotate at size
-	maxsize         int
+	maxsize int
+
+	//
 	maxsize_cursize int
 
 	// Rotate daily
-	daily          bool
+	daily bool
+
+	//
 	daily_opendate int
 
 	// Keep old logfiles (.001, .002, etc)
@@ -44,16 +50,18 @@ type FileLogWriter struct {
 	sanitize bool
 }
 
-// This is the FileLogWriter's output method
+//LogWrite This is the FileLogWriter's output method
 func (w *FileLogWriter) LogWrite(rec *LogRecord) {
 	w.rec <- rec
 }
 
+//Close close the output
 func (w *FileLogWriter) Close() {
 	close(w.rec)
 	w.file.Sync()
 }
 
+//Flush flush content to output
 func (w *FileLogWriter) Flush() {
 	w.file.Sync()
 }
@@ -160,7 +168,7 @@ func NewFileLogWriter(fname string, rotate bool, daily bool) *FileLogWriter {
 	return w
 }
 
-//determine if a file or folder exists
+//PathExists determines if a file or folder exists
 //if bool is true,the file or folder exists
 func PathExists(path string) (bool, error) {
 	_, err := os.Stat(path)
@@ -173,7 +181,7 @@ func PathExists(path string) (bool, error) {
 	return false, err
 }
 
-// Request that the logs rotate
+//Rotate requests that the logs rotate
 func (w *FileLogWriter) Rotate() {
 	w.rot <- true
 }
@@ -254,14 +262,14 @@ func (w *FileLogWriter) intRotate() error {
 	return nil
 }
 
-// Set the logging format (chainable).  Must be called before the first log
+// SetFormat sets the logging format (chainable).  Must be called before the first log
 // message is written.
 func (w *FileLogWriter) SetFormat(format string) *FileLogWriter {
 	w.format = format
 	return w
 }
 
-// Set the logfile header and footer (chainable).  Must be called before the first log
+// SetHeadFoot sets the logfile header and footer (chainable).  Must be called before the first log
 // message is written.  These are formatted similar to the FormatLogRecord (e.g.
 // you can use %D and %T in your header/footer for date and time).
 func (w *FileLogWriter) SetHeadFoot(head, foot string) *FileLogWriter {
@@ -272,7 +280,7 @@ func (w *FileLogWriter) SetHeadFoot(head, foot string) *FileLogWriter {
 	return w
 }
 
-// Set rotate at linecount (chainable). Must be called before the first log
+// SetRotateLines sets rotate at linecount (chainable). Must be called before the first log
 // message is written.
 func (w *FileLogWriter) SetRotateLines(maxlines int) *FileLogWriter {
 	//fmt.Fprintf(os.Stderr, "FileLogWriter.SetRotateLines: %v\n", maxlines)
@@ -280,7 +288,7 @@ func (w *FileLogWriter) SetRotateLines(maxlines int) *FileLogWriter {
 	return w
 }
 
-// Set rotate at size (chainable). Must be called before the first log message
+// SetRotateSize sets rotate at size (chainable). Must be called before the first log message
 // is written.
 func (w *FileLogWriter) SetRotateSize(maxsize int) *FileLogWriter {
 	//fmt.Fprintf(os.Stderr, "FileLogWriter.SetRotateSize: %v\n", maxsize)
@@ -288,7 +296,7 @@ func (w *FileLogWriter) SetRotateSize(maxsize int) *FileLogWriter {
 	return w
 }
 
-// Set rotate daily (chainable). Must be called before the first log message is
+// SetRotateDaily sets rotate daily (chainable). Must be called before the first log message is
 // written.
 func (w *FileLogWriter) SetRotateDaily(daily bool) *FileLogWriter {
 	//fmt.Fprintf(os.Stderr, "FileLogWriter.SetRotateDaily: %v\n", daily)
@@ -296,7 +304,7 @@ func (w *FileLogWriter) SetRotateDaily(daily bool) *FileLogWriter {
 	return w
 }
 
-// Set max backup files. Must be called before the first log message
+// SetRotateMaxBackup sets max backup files. Must be called before the first log message
 // is written.
 func (w *FileLogWriter) SetRotateMaxBackup(maxbackup int) *FileLogWriter {
 	w.maxbackup = maxbackup

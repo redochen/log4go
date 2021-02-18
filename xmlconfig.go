@@ -28,7 +28,7 @@ type xmlLoggerConfig struct {
 	Filter []xmlFilter `xml:"filter"`
 }
 
-// Load XML configuration; see examples/example.xml for documentation
+//LoadConfiguration Load XML configuration; see examples/example.xml for documentation
 func (l Logger) LoadConfiguration(filename string) {
 	l.Close()
 

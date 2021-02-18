@@ -10,12 +10,14 @@ import (
 	"github.com/toolkits/file"
 )
 
+//ConsoleConfig config struct for console log
 type ConsoleConfig struct {
 	Enable  bool   `json:"enable"`
 	Level   string `json:"level"`
 	Pattern string `json:"pattern"`
 }
 
+//FileConfig config struct for file log
 type FileConfig struct {
 	Enable   bool   `json:"enable"`
 	Category string `json:"category"`
@@ -41,6 +43,7 @@ type FileConfig struct {
 	Sanitize bool   `json:"sanitize"` //Sanitize newlines to prevent log injection
 }
 
+// SocketConfig config for socket log
 type SocketConfig struct {
 	Enable   bool   `json:"enable"`
 	Category string `json:"category"`
@@ -218,6 +221,7 @@ func jsonToSocketLogWriter(filename string, sf *SocketConfig) (SocketLogWriter, 
 	return NewSocketLogWriter(protocol, endpoint), true
 }
 
+//ReadFile reads file
 func ReadFile(path string) (string, error) {
 	if path == "" {
 		return "", fmt.Errorf("[%s] path empty", path)

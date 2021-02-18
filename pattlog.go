@@ -24,7 +24,7 @@ type formatCacheType struct {
 
 var formatCache = &formatCacheType{}
 
-// Known format codes:
+// FormatLogRecord Known format codes:
 // %T - Time (15:04:05 MST)
 // %t - Time (15:04)
 // %D - Date (2006/01/02)
@@ -105,10 +105,10 @@ func FormatLogRecord(format string, rec *LogRecord) string {
 	return out.String()
 }
 
-// This is the standard writer that prints to standard output.
+// FormatLogWriter This is the standard writer that prints to standard output.
 type FormatLogWriter chan *LogRecord
 
-// This creates a new FormatLogWriter
+// NewFormatLogWriter This creates a new FormatLogWriter
 func NewFormatLogWriter(out io.Writer, format string) FormatLogWriter {
 	records := make(FormatLogWriter, LogBufferLength)
 	go records.run(out, format)
@@ -122,7 +122,7 @@ func (w FormatLogWriter) run(out io.Writer, format string) {
 	}
 }
 
-// This is the FormatLogWriter's output method.  This will block if the output
+// LogWrite This is the FormatLogWriter's output method.  This will block if the output
 // buffer is full.
 func (w FormatLogWriter) LogWrite(rec *LogRecord) {
 	w <- rec
@@ -134,6 +134,7 @@ func (w FormatLogWriter) Close() {
 	close(w)
 }
 
+//Flush flush the content to standard output
 func (w FormatLogWriter) Flush() {
 
 }

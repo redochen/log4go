@@ -56,9 +56,9 @@ var formatTests = []struct {
 		},
 		Formats: map[string]string{
 			// TODO(kevlar): How can I do this so it'll work outside of PST?
-			FORMAT_DEFAULT: "[2009/02/13 23:31:30 UTC] [EROR] (source) message\n",
-			FORMAT_SHORT:   "[23:31 13/02/09] [EROR] message\n",
-			FORMAT_ABBREV:  "[EROR] message\n",
+			FORMAT_DEFAULT: "[2009/02/13 23:31:30 UTC] [ERR] (source) message\n",
+			FORMAT_SHORT:   "[23:31 13/02/09] [ERR] message\n",
+			FORMAT_ABBREV:  "[ERR] message\n",
 		},
 	},
 }
@@ -90,7 +90,7 @@ var formatTestsDttmPattern = []struct {
 			Created: now,
 		},
 		Formats: map[string]string{
-			"[%D{2006-01-02T15:04:05}] [%L] (%S) %M": "[2009-02-13T23:31:30] [EROR] (source) message\n",
+			"[%D{2006-01-02T15:04:05}] [%L] (%S) %M": "[2009-02-13T23:31:30] [ERR] (source) message\n",
 		},
 	},
 }
@@ -267,7 +267,7 @@ func TestLogOutput(t *testing.T) {
 	// Send some log messages
 	l.Log(FATAL, "testsrc1", fmt.Sprintf("This message is level %d", int(FATAL)))
 	l.Logf(ERROR, "This message is level %v", ERROR)
-	l.Logf(WARNING, "This message is level %s", WARNING)
+	l.Logf(WARNING, "This message is level %v", WARNING)
 	l.Logc(INFO, func() string { return "This message is level INFO" })
 	l.Info("This message is level %d", int(INFO))
 	l.Debug("This message is level %s", DEBUG)
